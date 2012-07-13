@@ -16,8 +16,10 @@ CREATE TABLE IF NOT EXISTS `category` (
 CREATE TABLE IF NOT EXISTS `puzzle` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `value` int(11) NOT NULL,
-  `answer` varchar(30) NOT NULL,
+  `answer` varchar(40) NOT NULL,
   `description` text,
+  `notes` text,
+  `author` varchar(40),
   `category_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `answer` (`answer`),
@@ -29,8 +31,22 @@ CREATE TABLE IF NOT EXISTS `puzzle_solved` (
   `team_id` int(11) NOT NULL,
   `puzzle_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
+  INDEX (`team_id`),
   UNIQUE KEY `solved` (`team_id`, `puzzle_id`),
   FOREIGN KEY (`team_id`) REFERENCES team(`id`),
   FOREIGN KEY (`puzzle_id`) REFERENCES puzzle(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `puzzle_file` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `puzzle_id` int(11) NOT NULL,
+  `name` varchar(40) NOT NULL,
+  `url` varchar(200) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX (`puzzle_id`),
+  UNIQUE KEY `name` (`puzzle_id`, `name`),
+  UNIQUE KEY `url` (`puzzle_id`, `url`),
+  FOREIGN KEY (`puzzle_id`) REFERENCES puzzle(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 

@@ -1,0 +1,22 @@
+{% extends "install.html" %}
+
+{% block body %}
+{{ parent() }}
+<form name="install" method="post">
+
+<h2>Database Info</h2>
+<div>Username:<br/>
+<input type="text" name="db_user" /></div>
+<div>Password:<br/>
+<input type="password" name="db_pass" /></div>
+<div>Database:<br/>
+<input type="text" name="db_name" /></div>
+<div>Host:<br/>
+<input type="text" name="db_host" value="localhost" /></div>
+
+<div>
+<input type="submit" value="Submit" name="do_install" />
+</div>
+
+</form>
+{% endblock %}
