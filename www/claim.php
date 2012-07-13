@@ -15,6 +15,7 @@ function check_answer($teamhash, $puzzle_id, $answer) {
 
 	$dbh = db_connect();
 
+	// Find their team
 	$query = $dbh->prepare('SELECT id FROM team WHERE hash = :hash');
 	$query->bindValue(':hash', $teamhash);
 	$query->execute();
@@ -26,44 +27,68 @@ function check_answer($teamhash, $puzzle_id, $answer) {
 	}
 	$team_id = $team_id['id'];
 
+	// See if the puzzle exists
 	$query = $dbh->prepare('SELECT COUNT(*) AS num FROM puzzle WHERE id = :id');
 	$query->bindValue(':id', $puzzle_id);
 	$query->execute();
 
-	$c = $query->fetch();
-	if ($c['num'] == 0) {
+	$count_puz = $query->fetch();
+	if ($count_puz['num'] == 0) {
 		$errors[] = "Could not find puzzle with ID " . $puzzle_id;
 		return false;
 	}
 
-	$query = $dbh->prepare('SELECT value FROM puzzle WHERE answer = :answer AND id = :id');
+	// Check if they got the right answer
+	$query = $dbh->prepare('SELECT value, category_id FROM puzzle WHERE answer = :answer AND id = :id');
 	$query->bindValue(':answer', $answer);
 	$query->bindValue(':id', $puzzle_id);
 	$query->execute();
 
-	$r = $query->fetch();
-	if ($r === false) {
+	$puz_row = $query->fetch();
+	if ($puz_row === false) {
 		$errors[] = 'Incorrect answer!';
-		return false;
 	}
 
+	// Check if they have solved this one before
 	$query = $dbh->prepare('SELECT COUNT(*) as num FROM puzzle_solved WHERE team_id = :team_id AND puzzle_id = :puzzle_id');
 	$query->bindValue(':team_id', $team_id);
 	$query->bindValue(':puzzle_id', $puzzle_id);
 	$query->execute();
 
-	$c = $query->fetch();
-	if ($c['num'] > 0) {
+	$count_solved = $query->fetch();
+	if ($count_solved['num'] > 0) {
 		$errors[] = 'This puzzle has already been solved by this team!';
-		return false;
 	}
 
+	if (count($errors) > 0)
+		return false;
+
+	$awarded = $puz_row['value'];
+
+	$dbh->beginTransaction();
+
+	// Record that this team solved the puzzle
 	$query = $dbh->prepare('INSERT INTO puzzle_solved (team_id, puzzle_id) VALUES (:team_id, :puzzle_id)');
 	$query->bindValue(':team_id', $team_id);
 	$query->bindValue(':puzzle_id', $puzzle_id);
 	$query->execute();
 
-	$awarded = $r['value'];
+	// Unlock the next puzzle
+	$query = $dbh->prepare('SELECT MIN(value) AS nextvalue FROM puzzle WHERE category_id = :category_id AND value > :thisvalue');
+	$query->bindValue(':category_id', $puz_row['category_id']);
+	$query->bindValue(':thisvalue', $awarded);
+	$query->execute();
+
+	$next = $query->fetch();
+	$nextvalue = $next['nextvalue'];
+	if ($nextvalue !== null) {
+		$query = $dbh->prepare('UPDATE category SET unlocked_value = :nextvalue WHERE id = :category_id');
+		$query->bindValue(':nextvalue', $nextvalue);
+		$query->bindValue(':category_id', $puz_row['category_id']);
+		$query->execute();
+	}
+
+	$dbh->commit();
 }
 
 if (count($errors)==0) {
