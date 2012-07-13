@@ -12,7 +12,7 @@
 	{% for puzzle in category.puzzles %}
 		<span class="puzzle"><a href="puzzle.php?id={{ puzzle.id }}">{{ puzzle.value }}</a></span>
 	{% else %}
-		<p>There are no active puzzles in this category.</p>
+		<p>There are no active puzzles in this category at this time.</p>
 	{% endfor %}
 	</div>
 {% else %}

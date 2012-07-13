@@ -28,24 +28,35 @@ function check_answer($teamhash, $puzzle_id, $answer) {
 	$team_id = $team_id['id'];
 
 	// See if the puzzle exists
-	$query = $dbh->prepare('SELECT COUNT(*) AS num FROM puzzle WHERE id = :id');
-	$query->bindValue(':id', $puzzle_id);
-	$query->execute();
-
-	$count_puz = $query->fetch();
-	if ($count_puz['num'] == 0) {
-		$errors[] = "Could not find puzzle with ID " . $puzzle_id;
-		return false;
-	}
-
-	// Check if they got the right answer
-	$query = $dbh->prepare('SELECT value, category_id FROM puzzle WHERE answer = :answer AND id = :id');
-	$query->bindValue(':answer', $answer);
+	$query = $dbh->prepare('SELECT * FROM puzzle WHERE id = :id');
 	$query->bindValue(':id', $puzzle_id);
 	$query->execute();
 
 	$puz_row = $query->fetch();
 	if ($puz_row === false) {
+		$errors[] = "Could not find puzzle with ID $puzzle_id";
+		return false;
+	}
+
+	// Check if the puzzle is in an active category
+	$query = $dbh->prepare('SELECT * FROM category WHERE id = :id');
+	$query->bindValue(':id', $puz_row['category_id']);
+	$query->execute();
+
+	$cat_row = $query->fetch();
+	if (!$cat_row['active'] || $cat_row['unlocked_value'] < $puz_row['value']) {
+		$errors[] = 'This puzzle is not active yet!';
+		return false;
+	}
+
+	// Check if they got the right answer
+	$query = $dbh->prepare('SELECT COUNT(*) AS num FROM puzzle WHERE answer = :answer AND id = :id');
+	$query->bindValue(':answer', $answer);
+	$query->bindValue(':id', $puzzle_id);
+	$query->execute();
+
+	$count_puz = $query->fetch();
+	if ($count_puz['num'] == 0) {
 		$errors[] = 'Incorrect answer!';
 	}
 

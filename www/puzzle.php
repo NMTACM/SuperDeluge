@@ -23,7 +23,7 @@ if ($puzzle_row === false) {
 	)));
 }
 
-if ($puzzle_row['category_id'] !== false) {
+if ($puzzle_row['category_id'] !== null) {
 	$query = $dbh->prepare('SELECT * FROM category WHERE id = :id');
 	$query->bindValue(':id', $puzzle_row['category_id']);
 	$query->execute();
