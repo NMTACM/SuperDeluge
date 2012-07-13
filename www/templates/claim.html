@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Answer Claim</title>
+</head>
+<body>
+<h1>Answer Claim</h1>
+{% for error in errors %}
+	<div class="error">{{ error }}</div>
+{% else %}
+	<p>
+	{% if awarded == 1 %}
+		Success! 1 point awarded to {{ teamhash }}!
+	{% else %}
+		Success! {{ awarded }} points awarded to {{ teamhash }}!
+	{% endif %}
+	</p>
+{% endfor %}
+</body>
+</html>
