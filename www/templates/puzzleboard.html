@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Puzzles</title>
+</head>
+<body>
+<h1>Puzzles</h1>
+
+{% for category in categories %}
+	<div class="category">
+	<h2>{{ category.name }}</h2>
+	{% for puzzle in category.puzzles %}
+		<span class="puzzle"><a href="puzzle.php?id={{ puzzle.id }}">{{ puzzle.value }}</a></span>
+	{% else %}
+		<p>There are no active puzzles in this category.</p>
+	{% endfor %}
+	</div>
+{% else %}
+	<p>No categories are open at this time.</p>
+{% endfor %}
+
+</body>
+</html>

@@ -1,26 +1,49 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-<title>Puzzle</title>
-</head>
-<body>
-<h1>Puzzle</h1>
+<?php
 
-<form method="post" action="claim.php">
+require_once 'inc/functions.php';
 
-<h2>Database Info</h2>
-<div>Team Hash:<br/>
-<input type="text" name="hash" /></div>
-<div>Puzzle ID:<br/>
-<input type="text" name="puzzle" /></div>
-<div>Answer:<br/>
-<input type="text" name="answer" /></div>
+if (!isset($_GET['id'])) {
+	die($twig->render('error.html', array(
+		'error' => 'No puzzle ID specified!',
+	)));
+}
 
-<div>
-<input type="submit" value="Submit" />
-</div>
+$puzzle_id = $_GET['id'];
 
-</form>
+$dbh = db_connect();
 
-</body>
-</html>
+$query = $dbh->prepare('SELECT * FROM puzzle WHERE id = :id');
+$query->bindValue(':id', $puzzle_id);
+$query->execute();
+
+$puzzle_row = $query->fetch();
+if ($puzzle_row === false) {
+	die($twig->render('error.html', array(
+		'error' => 'Could not find a puzzle by that ID!',
+	)));
+}
+
+if ($puzzle_row['category_id'] !== false) {
+	$query = $dbh->prepare('SELECT * FROM category WHERE id = :id');
+	$query->bindValue(':id', $puzzle_row['category_id']);
+	$query->execute();
+
+	$r = $query->fetch();
+	if (!$r['active'] || $r['unlocked_value'] < $puzzle_row['value']) {
+		die($twig->render('error.html', array(
+			'error' => 'This puzzle is not active yet!',
+		)));
+	}
+
+	$category_name = $r['name'];
+} else {
+	$category_name = 'Uncategorized';
+}
+
+echo $twig->render('puzzle.html', array(
+	'value' => $puzzle_row['value'],
+	'description' => $puzzle_row['description'],
+	'author' => $puzzle_row['author'],
+	'category' => $category_name,
+	'id' => $puzzle_id,
+));

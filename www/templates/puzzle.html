@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>{{ value }} - {{ category }}</title>
+</head>
+<body>
+<h1>{{ value }} - {{ category }}</h1>
+
+{% if description %}
+	<div class="description">
+		<h2>Description</h2>
+		<pre>{{ description }}</pre>
+	</div>
+{% endif %}
+
+<p>Point value: {{ value }}</p>
+
+{% if files %}
+	<div class="files">
+	<h2>Files</h2>
+	<ul>
+	{% for file in files %}
+		<li><a href="{{ file.url }}">{{ file.name }}</a></li>
+	{% endfor %}
+	</ul>
+	<div>
+{% endif %}
+
+<form method="post" action="claim.php">
+
+<input type="hidden" name="puzzle" value="{{ id }}" />
+
+<div>Team Hash:<br/>
+<input type="text" name="hash" /></div>
+<div>Answer:<br/>
+<input type="text" name="answer" /></div>
+
+<div>
+<input type="submit" value="Submit" />
+</div>
+
+</form>
+
+{% if author %}
+	<p class="author">Author: {{ author }}</p>
+{% endif %}
+
+</body>
+</html>
