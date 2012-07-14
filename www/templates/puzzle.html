@@ -1,10 +1,7 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-<title>{{ value }} - {{ category }}</title>
-</head>
-<body>
-<h1>{{ value }} - {{ category }}</h1>
+{% extends "page.html" %}
+
+{% block body %}
+{{ parent() }}
 
 {% if description %}
 	<div class="description-container">
@@ -33,9 +30,9 @@
 <input type="hidden" name="puzzle" value="{{ id }}" />
 
 <div>Team Hash:<br/>
-<input type="text" name="hash" /></div>
+<input type="text" name="hash" autocomplete="off" /></div>
 <div>Answer:<br/>
-<input type="text" name="answer" /></div>
+<input type="text" name="answer" autocomplete="off" /></div>
 
 <div>
 <input type="submit" value="Submit" />
@@ -47,5 +44,4 @@
 	<p class="author">Author: {{ author }}</p>
 {% endif %}
 
-</body>
-</html>
+{% endblock %}

@@ -19,8 +19,8 @@ CREATE TABLE IF NOT EXISTS `category` (
 CREATE TABLE IF NOT EXISTS `puzzle` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `value` int(11) NOT NULL,
-  `answer` varchar(40) NOT NULL,
-  `description` text,
+  `answer` varchar(100) NOT NULL,
+  `description` mediumtext,
   `notes` text,
   `author` varchar(40),
   `category_id` int(11) NOT NULL,

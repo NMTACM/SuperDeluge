@@ -40,10 +40,20 @@ if ($puzzle_row['category_id'] !== null) {
 	$category_name = 'Uncategorized';
 }
 
+$f_query = $dbh->prepare('SELECT * FROM puzzle_file WHERE puzzle_id = :puzzle_id');
+$f_query->bindValue(':puzzle_id', $puzzle_id);
+$f_query->execute();
+
+$files = array();
+while (($file_row = $f_query->fetch())) {
+	$files[] = array("name" => $file_row['name'], "url" => $file_row['url']);
+}
+
 echo $twig->render('puzzle.html', array(
 	'value' => $puzzle_row['value'],
 	'description' => Markdown($puzzle_row['description']),
 	'author' => $puzzle_row['author'],
 	'category' => $category_name,
 	'id' => $puzzle_id,
+	'files' => $files,
 ));

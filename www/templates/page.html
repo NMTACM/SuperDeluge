@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="ctf-nmt.css" type="text/css">
+    {% block head %}
+    {% endblock %}
+  </head>
+  <body>
+    <div id="container">
+      <header>
+	<div class="divider">
+	  <div class="left">
+	    <a href="/"><img src="logo.png" alt="logo" id="logo"/></a>
+	  </div>
+
+	  <h1 id="page-title" class="right">{{ title }}</h1>
+	</div>
+      </header>
+
+      <!--used to split links and main horizontally-->
+      <div class="divider">
+	<section id="links" class="left">
+	  <ul>
+	    <li class="basic-link"><a href="/">Home</a></li>
+	    <li class="basic-link"><a href="/scoreboard.php">Scoreboard</a></li>
+	    <li class="basic-link"><a href="/puzzleboard.php">Puzzleboard</a></li>
+	  </ul>
+	</section>
+
+	<section id="main" class="right">
+	  {% block body %}
+	  {% if error %}
+	  <p class="error">{{ error }}</p>
+	  {% endif %}
+	  {% endblock %}
+	</section>
+      </div>
+    </div>
+  </body>
+</html>

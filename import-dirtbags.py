@@ -5,6 +5,8 @@ import sys
 import hashlib
 import shutil
 
+import MySQLdb
+
 def hashfile(filepath):
     sha1 = hashlib.sha1()
     with open(filepath, 'rb') as f:
@@ -67,19 +69,45 @@ def get_puzzles(path):
                     yield puzzle
 
 
+category_ids = dict()
+def get_category_id(catname, c):
+    if catname not in category_ids:
+        c.execute("""SELECT id FROM category WHERE name = %s""", (catname,))
+        catid = c.fetchone()
+        if catid is None:
+            c.execute("""INSERT INTO category (name, active) VALUES (%s, 1)""", (catname,))
+            return get_category_id(catname, c)
+        category_ids[catname] = catid[0]
+    return category_ids[catname]
+
 if __name__=="__main__":
     file_dest_dir = os.path.join(
         os.path.dirname(__file__), "www", "files",
         )
     if not os.path.isdir(file_dest_dir):
         os.mkdir(file_dest_dir)
+    db = MySQLdb.connect(host="localhost", user="ctf", passwd="", db="ctf")
+    c = db.cursor()
     for puzzle in get_puzzles(sys.argv[1]):
+        catid = get_category_id(puzzle['category'], c)
+        c.execute("""INSERT INTO puzzle (value, answer, description, notes, author, category_id) VALUES (%s, %s, %s, %s, %s, %s)""",
+                  (puzzle['value'], puzzle['answer'], puzzle['description'],
+                   puzzle['notes'], puzzle['author'], catid))
+        print "Inserted puzzle into category", puzzle['category'], "with value", puzzle['value']
+        puzzleid = None
         for puzzlefile in puzzle['files']:
+            if puzzleid is None:
+                c.execute("""SELECT id FROM puzzle WHERE value=%s AND answer=%s AND category_id=%s""",
+                          (puzzle['value'], puzzle['answer'], catid))
+                puzzleid = c.fetchone()[0]
             filename, oldfilepath = puzzlefile
             filehash = hashfile(oldfilepath)
             newfilepath = os.path.join(file_dest_dir, filehash)
             if not os.path.exists(newfilepath):
                 shutil.copyfile(oldfilepath, newfilepath)
-            print puzzlefile
-
-
+            newfileurl = "files/"+filehash
+            c.execute("""INSERT INTO puzzle_file (puzzle_id, name, url) VALUES (%s, %s, %s)""",
+                      (puzzleid, filename, newfileurl))
+            print "Inserted puzzle file", filename
+    c.close()
+    db.commit()

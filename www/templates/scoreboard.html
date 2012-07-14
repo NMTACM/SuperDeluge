@@ -1,12 +1,16 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-<title>Scoreboard</title>
-</head>
-<body>
-<h1>Scoreboard</h1>
+{% extends "page.html" %}
 
-<table>
+{% set title = 'Scoreboard' %}
+
+{% block head %}
+{{ parent() }}
+<meta http-equiv="refresh" content="10">
+{% endblock %}
+
+{% block body %}
+{{ parent() }}
+
+<table class="scoreboard">
   <tr>
     <th>Category</th>
     {% for team_id in team_names|keys %}
@@ -22,12 +26,11 @@
   </tr>
   {% endfor %}
   <tr>
-    <th>Final</th>
+    <th>Total</th>
     {% for team_id in team_names|keys %}
     <td>{{ team_total_scores[team_id]|number_format(3) }}</td>
     {% endfor %}
   </tr>
 </table>
 
-</body>
-</html>
+{% endblock %}

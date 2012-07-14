@@ -1,17 +1,10 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-<title>Install</title>
-</head>
-<body>
-<h1>Install</h1>
-{% if error %}
-  <div class="error">{{ error }}</div>
-{% endif %}
+{% extends "page.html" %}
+
+{% set title = 'Install' %}
+
 {% block body %}
+{{ parent() }}
 	{% for status in statuses %}
 		<p>{{ status }}</p>
 	{% endfor %}
 {% endblock %}
-</body>
-</html>

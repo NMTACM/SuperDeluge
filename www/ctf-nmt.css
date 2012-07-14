@@ -1,0 +1,182 @@
+/**
+ * Sam Olmsted 
+ * Last Update: Spring Break 
+ *
+ * Tweaked by: John Franks V
+ * Last Update: 5/26/2012
+ **/
+
+/**
+ * It has been a while since I did any web templating or styling. 
+ * Here are some of the sites that I used: 
+ * http://net.tutsplus.com/tutorials/html-css-techniques/html-5-and-css-3-the-techniques-youll-soon-be-using/
+ **/
+
+/**
+ * Basic reset of the page
+ **/
+/* Makeshift CSS Reset */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+table.scores td {
+    padding: 5px;
+    border-color: #600;
+    border-width: 1px 0 0 0;
+    border-style: solid;
+}
+
+.scoreboard td {
+    border-color: #600;
+    border-width: 2px 0px 0 0;
+    border-style: solid;
+    font-weight: bold;
+}
+
+.scoreboard td {
+    border-color: #600;
+    border-width: 2px 0px 0 0;
+    border-style: solid;
+    text-align: center;
+}
+
+.scoreboard th {
+    padding: 5px;
+    border: none;
+}
+
+body {
+    background: #fff;
+    background: url(bgd_sun.png) right top no-repeat;
+    overflow: scroll;
+}
+
+/* Tell the browser to render HTML 5 elements as block */
+header, footer, aside, nav, article {
+  display: block;
+}
+
+/**
+ * Divider: split the page, ie links and main horizontally
+ * Use 'left' and 'right' to set the widths of the splits. 
+ **/
+.divider{
+  display: table;
+}
+
+.left{
+  display: table-cell;
+  width: 200px;
+}
+
+.right{
+  display: table-cell;
+  width: 800px;
+}
+
+/**
+ * Logo: location of the design for the compitition  
+ **/
+#logo{
+  display: table-cell;
+  max-width: 200px;
+  max-height: 200px;
+  border: none;
+  /*background: #880;*/
+}
+
+/**
+ * Add the competition name to the title of every page
+ */
+#page-title:before {
+  content: "Cyber Deluge: ";
+}
+
+/**
+ * Links: a sidebar on the left of the page, where links to the main page, 
+ * scoreboard, puzzles, etc. can be found 
+ **/
+#links{
+  /*background: #ff0;*/
+}
+
+.basic-link a{
+  display: block;
+  text-decoration: none;
+  background: #FE5800;
+  color: #000;
+  margin: 5px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 5px;
+  border: 4px solid #000;
+}
+
+.basic-link a:hover { /* Change the color of the link font */
+  text-decoration: none;
+  background: #45D5FF;
+  color: #000;
+}
+
+.link-inner-box{
+  padding-left: 5px;
+  position: relative;
+  top: 25%;
+}
+
+/**
+ * Main: a center frame, where the text, scoreboard, and puzzles should be displayed
+ **/
+#main {
+  padding: 10px;
+  border-left: 5px double #000;
+  border-top: 5px double #000;
+}
+
+article{
+  background: #E8F1F0;
+  border: 5px solid #C7DFDD;
+  margin-bottom: 10px;
+  margin-left: 5px;
+  margin-top: 5px;
+  padding: 5px;
+}
+
+article h1{
+  margin-left: 15px;
+  font-size: 25px
+}
+
+article h2{
+  font-size: 20px;
+  margin-left: 15px;
+}
+
+article p{
+  margin: 5px;
+}
+
+article pre{
+  margin-left: 10px;
+  margin-right: 10px;
+  padding: 5px;
+  background: #99CC00;
+  border: 2.5px groove #231F20;
+}
+
+article ul{
+  margin-left: 15px;
+}
+
+article fieldset{
+  margin: 5px;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding: 5px;
+  /*background: #D7C88D;*/
+  /*background: #7AE118*/;
+  background: #99CC00;
+  border: 2.5px groove #231F20;
+}

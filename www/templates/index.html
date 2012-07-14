@@ -1,0 +1,36 @@
+{% extends "page.html" %}
+
+{% set title = "Home" %}
+
+{% block body %}
+        <article>
+          <h1> Welcome </h1>
+          <p> 
+              This is brought to you by New Mexico Institute of Mining and Technology's
+              Student Chapter of Association for Computing Machinery
+          </p>
+        </article>
+
+        <article>
+          <h1> Rules </h1>
+            <ul>
+              <li>
+                No DoS attacks.
+              </li>
+              <li>
+                Contest servers lie within <samp>fd84:b410:3441::/112</samp>.
+                Do not attack machines outside <samp>fd84:b410:3441::/48</samp>.
+                Low ports (under 1024) do not run contest categories, don't
+                waste your time.
+              </li>
+              <li>
+                Consider the contest network hostile.  It is up to you to
+                safeguard, encrypt, or delete sensitive data on your computer.
+              </li>
+              <li>
+                We reserve the right to kick you out of the contest for any
+                reason, so play nice.
+              </li>
+            </ul>
+        </article>
+{% endblock %}

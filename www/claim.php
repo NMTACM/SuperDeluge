@@ -2,16 +2,16 @@
 
 require_once 'inc/functions.php';
 
-$errors = array();
+$error = '';
 
-@$teamhash = $_POST['hash'] or $errors[] = "Team hash not set!";
-@$puzzle_id = $_POST['puzzle'] or $errors[] = "Puzzle not set!";
-@$answer = $_POST['answer'] or $errors[] = "Answer not set!";
+@$teamhash = $_POST['hash'] or $error .= " Team hash not set!";
+@$puzzle_id = $_POST['puzzle'] or $error .= " Puzzle not set!";
+@$answer = $_POST['answer'] or $error .= " Answer not set!";
 
 $awarded = 0;
 
 function check_answer($teamhash, $puzzle_id, $answer) {
-	global $errors, $awarded;
+	global $error, $awarded;
 
 	$dbh = db_connect();
 
@@ -22,7 +22,7 @@ function check_answer($teamhash, $puzzle_id, $answer) {
 
 	$team_id = $query->fetch();
 	if ($team_id === false) {
-		$errors[] = "Could not find team with hash " . $teamhash;
+		$error .= " Could not find team with hash " . $teamhash;
 		return false;
 	}
 	$team_id = $team_id['id'];
@@ -34,7 +34,7 @@ function check_answer($teamhash, $puzzle_id, $answer) {
 
 	$puz_row = $query->fetch();
 	if ($puz_row === false) {
-		$errors[] = "Could not find puzzle with ID $puzzle_id";
+		$error .= " Could not find puzzle with ID $puzzle_id";
 		return false;
 	}
 
@@ -45,7 +45,7 @@ function check_answer($teamhash, $puzzle_id, $answer) {
 
 	$cat_row = $query->fetch();
 	if (!$cat_row['active'] || $cat_row['unlocked_value'] < $puz_row['value']) {
-		$errors[] = 'This puzzle is not active yet!';
+		$error .= ' This puzzle is not active yet!';
 		return false;
 	}
 
@@ -57,7 +57,7 @@ function check_answer($teamhash, $puzzle_id, $answer) {
 
 	$count_puz = $query->fetch();
 	if ($count_puz['num'] == 0) {
-		$errors[] = 'Incorrect answer!';
+		$error .= ' Incorrect answer!';
 	}
 
 	// Check if they have solved this one before
@@ -68,10 +68,10 @@ function check_answer($teamhash, $puzzle_id, $answer) {
 
 	$count_solved = $query->fetch();
 	if ($count_solved['num'] > 0) {
-		$errors[] = 'This puzzle has already been solved by this team!';
+		$error .= ' This puzzle has already been solved by this team!';
 	}
 
-	if (count($errors) > 0)
+	if (strlen($error) > 0)
 		return false;
 
 	$awarded = $puz_row['value'];
@@ -92,7 +92,7 @@ function check_answer($teamhash, $puzzle_id, $answer) {
 
 	$next = $query->fetch();
 	$nextvalue = $next['nextvalue'];
-	if ($nextvalue !== null) {
+	if ($nextvalue !== null && $nextvalue > $cat_row['unlocked_value']) {
 		$query = $dbh->prepare('UPDATE category SET unlocked_value = :nextvalue WHERE id = :category_id');
 		$query->bindValue(':nextvalue', $nextvalue);
 		$query->bindValue(':category_id', $puz_row['category_id']);
@@ -102,12 +102,12 @@ function check_answer($teamhash, $puzzle_id, $answer) {
 	$dbh->commit();
 }
 
-if (count($errors)==0) {
+if (!$error) {
 	check_answer($teamhash, $puzzle_id, $answer);
 }
 
 echo $twig->render('claim.html', array(
-	'errors' => $errors,
+	'error' => $error,
 	'awarded' => $awarded,
 	'teamhash' => $teamhash,
 ));

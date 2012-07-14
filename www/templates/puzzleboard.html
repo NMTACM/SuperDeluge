@@ -1,10 +1,9 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-<title>Puzzles</title>
-</head>
-<body>
-<h1>Puzzles</h1>
+{% extends "page.html" %}
+
+{% set title = 'Puzzleboard' %}
+
+{% block body %}
+{{ parent() }}
 
 {% for category in categories %}
 	<div class="category">
@@ -19,5 +18,5 @@
 	<p>No categories are open at this time.</p>
 {% endfor %}
 
-</body>
-</html>
+{% endblock %}
+
