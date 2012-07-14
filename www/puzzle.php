@@ -42,7 +42,7 @@ if ($puzzle_row['category_id'] !== null) {
 
 echo $twig->render('puzzle.html', array(
 	'value' => $puzzle_row['value'],
-	'description' => $puzzle_row['description'],
+	'description' => Markdown($puzzle_row['description']),
 	'author' => $puzzle_row['author'],
 	'category' => $category_name,
 	'id' => $puzzle_id,

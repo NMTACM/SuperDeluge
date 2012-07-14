@@ -7,9 +7,11 @@
 <h1>{{ value }} - {{ category }}</h1>
 
 {% if description %}
-	<div class="description">
+	<div class="description-container">
 		<h2>Description</h2>
-		<pre>{{ description }}</pre>
+		<div class="description">
+		  {{ description|raw }}
+		</div>
 	</div>
 {% endif %}
 
