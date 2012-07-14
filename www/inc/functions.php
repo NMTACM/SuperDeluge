@@ -15,6 +15,8 @@ $twig = new Twig_Environment($loader, array(
       'cache' => 'templates/cache',
 ));
 
+require_once 'inc/lib/markdown/markdown.php';
+
 require_once 'inc/config.php';
 if(file_exists('inc/instance-config.php'))
 	require_once 'inc/instance-config.php';
