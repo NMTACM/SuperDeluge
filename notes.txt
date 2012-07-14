@@ -1,0 +1,1 @@
+UPDATE category SET unlocked_value = (SELECT MIN(value) FROM puzzle WHERE category_id=category.id) WHERE unlocked_value is null;
