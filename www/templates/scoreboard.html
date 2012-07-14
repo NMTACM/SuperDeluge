@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Scoreboard</title>
+</head>
+<body>
+<h1>Scoreboard</h1>
+
+<table>
+  <tr>
+    <th>Category</th>
+    {% for team_id in team_names|keys %}
+    <th>{{ team_names[team_id] }}</th>
+    {% endfor %}
+  </tr>
+  {% for category_name in cat_team_scores|keys %}
+  <tr>
+    <td>{{ category_name }}</td>
+    {% for team_id in team_names|keys %}
+    <td>{{ cat_team_scores[category_name][team_id] }}</td>
+    {% endfor %}
+  </tr>
+  {% endfor %}
+  <tr>
+    <th>Final</th>
+    {% for team_id in team_names|keys %}
+    <td>{{ team_total_scores[team_id]|number_format(3) }}</td>
+    {% endfor %}
+  </tr>
+</table>
+
+</body>
+</html>
