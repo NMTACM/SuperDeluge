@@ -2,8 +2,20 @@
 
 import os
 import sys
+import hashlib
+import shutil
 
-def read_puzzles(path):
+def hashfile(filepath):
+    sha1 = hashlib.sha1()
+    with open(filepath, 'rb') as f:
+        while True:
+            data = f.read(1024)
+            if not data:
+                break
+            sha1.update(data)
+    return sha1.hexdigest()
+
+def get_puzzles(path):
     for category in os.listdir(path):
         catpath = os.path.join(path, category)
         if os.path.isdir(catpath):
@@ -46,7 +58,7 @@ def read_puzzles(path):
 
                     puzzle['files'] = list()
                     for filename in os.listdir("."):
-                        if filename[0] == "@":
+                        if filename[0] == "@" or not os.path.isfile(filename):
                             continue
                         pfile = (filename, os.path.join(valpath, filename))
                         puzzle['files'].append(pfile)
@@ -56,5 +68,18 @@ def read_puzzles(path):
 
 
 if __name__=="__main__":
-    for puzzle in read_puzzles(sys.argv[1]):
-        print puzzle
+    file_dest_dir = os.path.join(
+        os.path.dirname(__file__), "www", "files",
+        )
+    if not os.path.isdir(file_dest_dir):
+        os.mkdir(file_dest_dir)
+    for puzzle in get_puzzles(sys.argv[1]):
+        for puzzlefile in puzzle['files']:
+            filename, oldfilepath = puzzlefile
+            filehash = hashfile(oldfilepath)
+            newfilepath = os.path.join(file_dest_dir, filehash)
+            if not os.path.exists(newfilepath):
+                shutil.copyfile(oldfilepath, newfilepath)
+            print puzzlefile
+
+
