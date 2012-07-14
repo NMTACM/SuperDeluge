@@ -51,7 +51,7 @@ def get_puzzles(path):
 
                     if os.path.exists("@index.mdwn"):
                         with file("@index.mdwn") as f:
-                            puzzle['description'] = f.read().strip()
+                            puzzle['description'] = f.read().rstrip()
                     else:
                         puzzle['description'] = None
 

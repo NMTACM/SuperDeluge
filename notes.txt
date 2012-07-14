@@ -1,1 +1,3 @@
 UPDATE category SET unlocked_value = (SELECT MIN(value) FROM puzzle WHERE category_id=category.id) WHERE unlocked_value is null;
+
+update category set unlocked_value=(select min(value) from puzzle where category_id=category.id and value > all (select value from puzzle inner join puzzle_solved on puzzle.id=puzzle_id where category_id=category.id));
