@@ -1,11 +1,29 @@
 Super Deluge
 ============
 
-Install by placing the files in www/ under your HTTP server's public document
-root. Make sure that the inc/ and templates/ folders are writable by the server
-process. (This may involve `sudo chown -R www-data inc/ templates` for
-example.) Then load install.php in a browser to set your database details. The
-settings are automatically saved inside the inc/instance-config.php file.
+This is a simple scoreboard framework that allows teams to compete to
+solve puzzles in different categories. Whenever one team completes a
+puzzle in a category, the next puzzle in that category is unlocked for
+everyone. (If multiple puzzles have the same point value, then several
+may be unlocked.) Puzzles consist of a description, possibly some
+amount of related files, and a plaintext answer that the contestants
+must figure out and submit.
+
+Scoring
+-------
+
+Each team's final score is calculated by summing the fraction of the
+total points each team has in each category.
+
+This means that scoring 5 points in a category that no one else has
+gotten any points in yet will get you 1 point for your final
+score. Getting 5 more points to a total of 10 points in that category
+doesn't change your final score while you're still alone in that
+category. If another team then gains 10 points in that category, then
+each of the two team with 10 points in that category will only get 0.5
+points toward their final score for that category.
+
+This encourages teams to try to compete across all of the categories.
 
 Player Usage
 ------------
@@ -13,6 +31,15 @@ Player Usage
 Every team has a visible name, and a team hash that is used to submit
 answers. The team hash may be kept private, though all another team could do
 with it is submit answers and score points as that team.
+
+Installation
+------------
+
+Install by placing the files in www/ under your HTTP server's public document
+root. Make sure that the inc/ and templates/ folders are writable by the server
+process. (This may involve `sudo chown -R www-data inc/ templates` for
+example.) Then load install.php in a browser to set your database details. The
+settings are automatically saved inside the inc/instance-config.php file.
 
 Administration
 --------------
