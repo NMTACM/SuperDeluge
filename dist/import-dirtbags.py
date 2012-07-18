@@ -18,6 +18,17 @@ def hashfile(filepath):
     return sha1.hexdigest()
 
 def get_puzzles(path):
+    """This function yields puzzles.
+
+    The puzzles are python dictionaries containing a `category` name,
+    an integer point `value`, an optional `author` name, an optional
+    `notes` field for private notes on how to solve a puzzle, a
+    `description` shown to the user in Markdown format, an exact text
+    `answer`, and `files`, which is a list of tuples of (filenames to
+    show to the user, file locations). All of these files are copied
+    into the files/ directory and named with their hash, and the
+    filename to show to the user is shown on the link on the puzzle's
+    page."""
     for category in os.listdir(path):
         catpath = os.path.join(path, category)
         if os.path.isdir(catpath):
