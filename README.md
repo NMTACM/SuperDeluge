@@ -32,6 +32,13 @@ Every team has a visible name, and a team hash that is used to submit
 answers. The team hash may be kept private, though all another team could do
 with it is submit answers and score points as that team.
 
+Project Status
+--------------
+
+The template content is currently very un-styled, and the scoreboard
+page table needs some work to be a bit prettier. An easy
+administration interface besides the initial install page is missing.
+
 Installation
 ------------
 
@@ -70,3 +77,8 @@ for all categories is up-to-date with what puzzles have been solved so far, and
 it initializes new categories so their lowest value puzzle is unlocked:
 
     update category set unlocked_value=(select min(value) from puzzle where category_id=category.id and value > all (select value from puzzle inner join puzzle_solved on puzzle.id=puzzle_id where category_id=category.id));
+
+If you modify any of the templates under www/templates/ after the
+system has been in use, you will need to clear Twig's cache in order
+for them to be put in use. You can do this by deleting all files
+inside the www/templates/cache/ directory.
